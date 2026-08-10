@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Waggle — Expense Tracker</title>
+<meta name="description" content="A fun, professional personal expense tracker." />
+<meta name="theme-color" content="#d6362e" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body data-theme="dark">
+<div class="wrap">
+
+  <header class="app-header">
+    <img class="mascot" src="icons/icon-192.png" alt="Waggle mascot — a cartoon beagle" />
+    <div class="title-block">
+      <h1>Waggle</h1>
+      <p>Your good-boy budget buddy 🐾</p>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button">🌙 Dark</button>
+  </header>
+
+  <div class="install-banner" id="installBanner">
+    <span>📌 Install Waggle as an app for the best experience — tap the menu (⋮) and choose "Install app" or "Create shortcut".</span>
+    <button class="btn small" id="dismissInstall" type="button">Got it</button>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="dashboard" type="button">🏠 Dashboard</button>
+    <button class="tab-btn" data-tab="add" type="button">➕ Add Expense</button>
+    <button class="tab-btn" data-tab="journal" type="button">📒 Journal</button>
+    <button class="tab-btn" data-tab="reports" type="button">📊 Reports</button>
+    <button class="tab-btn" data-tab="backup" type="button">💾 Backup</button>
+  </nav>
+
+  <!-- DASHBOARD -->
+  <section class="panel active" id="panel-dashboard">
+    <div class="stat-row">
+      <div class="stat red">
+        <div class="label">This Month</div>
+        <div class="value" id="statMonth">$0.00</div>
+      </div>
+      <div class="stat mustard">
+        <div class="label">Today</div>
+        <div class="value" id="statToday">$0.00</div>
+      </div>
+      <div class="stat green">
+        <div class="label">Total Logged</div>
+        <div class="value" id="statTotal">$0.00</div>
+      </div>
+      <div class="stat navy">
+        <div class="label">Top Category</div>
+        <div class="value" id="statTop">—</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Recent Expenses</h2>
+      <div class="table-wrap">
+        <table id="recentTable">
+          <thead>
+            <tr><th>Date</th><th>Category</th><th>Notes</th><th>Amount</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="recentEmpty" style="display:none;">No expenses yet — go add your first one! 🐶</div>
+    </div>
+  </section>
+
+  <!-- ADD EXPENSE -->
+  <section class="panel" id="panel-add">
+    <div class="card">
+      <h2>Add an Expense</h2>
+      <form id="expenseForm">
+        <input type="hidden" id="editId" />
+        <div class="form-grid">
+          <div class="field">
+            <label for="amount">Amount ($)</label>
+            <input type="number" id="amount" step="0.01" min="0" placeholder="0.00" required />
+          </div>
+          <div class="field">
+            <label for="category">Category</label>
+            <select id="category"></select>
+          </div>
+          <div class="field">
+            <label for="date">Date</label>
+            <input type="date" id="date" required />
+          </div>
+          <div class="field">
+            <label for="newCategory">New Category (optional)</label>
+            <input type="text" id="newCategory" placeholder="e.g. Coffee" />
+          </div>
+        </div>
+        <div class="field" style="margin-top:14px;">
+          <label for="notes">Notes (optional)</label>
+          <textarea id="notes" placeholder="What was this for?"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn primary" id="submitBtn">🐾 Save Expense</button>
+          <button type="button" class="btn ghost" id="cancelEdit" style="display:none;">Cancel Edit</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- JOURNAL -->
+  <section class="panel" id="panel-journal">
+    <div class="card">
+      <h2>Filter</h2>
+      <div class="filters">
+        <div class="field">
+          <label for="filterFrom">From</label>
+          <input type="date" id="filterFrom" />
+        </div>
+        <div class="field">
+          <label for="filterTo">To</label>
+          <input type="date" id="filterTo" />
+        </div>
+        <div class="field">
+          <label for="filterCategory">Category</label>
+          <select id="filterCategory"><option value="">All</option></select>
+        </div>
+        <div class="field" style="flex:0;">
+          <button class="btn small" id="clearFilters" type="button">Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>All Expenses</h2>
+      <div class="table-wrap">
+        <table id="journalTable">
+          <thead>
+            <tr><th>Date</th><th>Category</th><th>Notes</th><th>Amount</th><th>Actions</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="journalEmpty" style="display:none;">Nothing here yet. 🦴</div>
+      <div class="form-actions" style="margin-top:16px;">
+        <button class="btn" id="exportCsvBtn" type="button">⬇️ Export CSV</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- REPORTS -->
+  <section class="panel" id="panel-reports">
+    <div class="card">
+      <h2>Spending by Category (This Month)</h2>
+      <div class="reports-grid">
+        <div>
+          <canvas id="categoryChart" width="360" height="360"></canvas>
+        </div>
+        <div>
+          <div class="legend" id="categoryLegend"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Last 6 Months Trend</h2>
+      <canvas id="trendChart" width="900" height="280"></canvas>
+    </div>
+  </section>
+
+  <!-- BACKUP -->
+  <section class="panel" id="panel-backup">
+    <div class="card">
+      <h2>Backup &amp; Transfer</h2>
+      <p>Waggle stores all data locally on this device — nothing is uploaded anywhere. To move your data to another Chromebook (or just keep a safety copy), export a backup file and import it on the other device.</p>
+      <div class="backup-actions">
+        <button class="btn primary" id="exportBackupBtn" type="button">⬇️ Export Backup (JSON)</button>
+        <label class="btn" style="display:inline-block;">
+          ⬆️ Import Backup
+          <input type="file" id="importBackupInput" accept="application/json" style="display:none;" />
+        </label>
+        <button class="btn danger" id="clearAllBtn" type="button">🗑️ Clear All Data</button>
+      </div>
+      <p class="hint">Tip: To move to a second Chromebook — export here, transfer the file (Google Drive, USB, email, etc.), open Waggle on the other device, then use Import Backup and pick the file.</p>
+    </div>
+  </section>
+
+  <footer>Made with 🐾 for tracking every treat and expense.</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
