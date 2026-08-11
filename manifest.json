@@ -9,7 +9,7 @@
   "theme_color": "#d6362e",
   "orientation": "any",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" }
+    { "src": "https://galaxy-prod.tlcdn.com/gen/user_34cYYCSWxJm6uJLhX4oUq8Pm97C/6a98b555-1400-4df5-868e-7ad7dd9af583.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" },
+    { "src": "https://galaxy-prod.tlcdn.com/gen/user_34cYYCSWxJm6uJLhX4oUq8Pm97C/6a98b555-1400-4df5-868e-7ad7dd9af583.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
   ]
 }
