@@ -1,14 +1,11 @@
 // Waggle Expense Tracker — Service Worker
 // Caches the app shell so it works fully offline once installed.
-const CACHE_NAME = "waggle-cache-v1";
+const CACHE_NAME = "waggle-cache-v2";
 const ASSETS = [
   "./index.html",
   "./styles.css",
   "./app.js",
-  "./manifest.json",
-  "./icons/icon-192.png",
-  "./icons/apple-touch-icon.png",
-  "./icons/favicon-32.png"
+  "./manifest.json"
 ];
 
 self.addEventListener("install", (event) => {
